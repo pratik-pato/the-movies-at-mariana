@@ -1,0 +1,24 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Registration</title>
+    <!-- Include Semantic UI CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css">
+    <link rel="stylesheet" href="{% static 'css/registration.css' %}">
+</head>
+<body>
+    <div class="ui center aligned container" style="height: 100vh; display: flex; justify-content: center; align-items: center;">
+        <div class="ui centered large card">
+            <div class="content">
+                <h1 class="header">User Registration</h1>
+                <form method="post" class="ui form">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit" class="ui button primary">Register</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Login</title>
+    <!-- Include Semantic UI CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css">
+    <!-- Link to your local CSS -->
+</head>
+<body>
+    <div class="ui center aligned container" style="height: 100vh; display: flex; justify-content: center; align-items: center;">
+        <div class="ui centered large card registration-card">
+            <div class="content">
+                <h1 class="header">User Login</h1>
+                <form method="post" class="ui form">
+                    {% csrf_token %}
+                    <div class="field">
+                        <label for="{{ form.username.id_for_label }}">Username</label>
+                        <input type="text" name="{{ form.username.name }}" id="{{ form.username.id_for_label }}" class="ui input" placeholder="Username">
+                    </div>
+                    <div class="field">
+                        <label for="{{ form.password.id_for_label }}">Password</label>
+                        <input type="password" name="{{ form.password.name }}" id="{{ form.password.id_for_label }}" class="ui input" placeholder="Password">
+                    </div>
+                    <button type="submit" class="ui button primary">Login</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
