@@ -1,14 +1,16 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Movies, Genre, RatingProvider
-from .serializers import MovieSerializer, GenreSerializer, RatingProviderSerializer
+from .models import Movies, Genre, RatingProvider, MovieGenre, MovieRating
+from .serializers import MovieSerializer, GenreSerializer, RatingProviderSerializer,\
+    MovieGenreSerializer, MovieRatingSerializer, MovieSerializerAll, MovieRatingValidationSerializer
 
 
 class MovieListCreateAPIView(APIView):
     def get(self, request):
-        movies = Movies.objects.all()
-        serializer = MovieSerializer(movies, many=True)
+        movies = Movies.objects.prefetch_related('moviegenre_set__genre', 'movierating_set__rating_provider').all()
+
+        serializer = MovieSerializerAll(movies, many=True)
         return Response(serializer.data)
 
     def post(self, request):
@@ -63,7 +65,7 @@ class GenreDetailAPIView(APIView):
         try:
             return Genre.objects.get(pk=pk)
         except Genre.DoesNotExist:
-            raise Http404
+            return Response("Genre not found", status=status.HTTP_404_NOT_FOUND)
 
     def get(self, request, pk):
         genre = self.get_object(pk)
@@ -102,7 +104,7 @@ class RatingProviderDetailAPIView(APIView):
         try:
             return RatingProvider.objects.get(pk=pk)
         except RatingProvider.DoesNotExist:
-            raise Http404
+            return Response("Rating provider not found", status=status.HTTP_404_NOT_FOUND)
 
     def get(self, request, pk):
         provider = self.get_object(pk)
@@ -122,3 +124,79 @@ class RatingProviderDetailAPIView(APIView):
         provider.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+
+class MovieGenreListCreateAPIView(APIView):
+    def get(self, request):
+        genres = MovieGenre.objects.all()
+        serializer = MovieGenreSerializer(genres, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = MovieGenreSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class MovieGenreDetailAPIView(APIView):
+    def get_object(self, pk):
+        try:
+            return MovieGenre.objects.get(pk=pk)
+        except MovieGenre.DoesNotExist:
+            return Response("Movie genre not found", status=status.HTTP_404_NOT_FOUND)
+
+    def get(self, request, pk):
+        genre = self.get_object(pk)
+        serializer = MovieGenreSerializer(genre)
+        return Response(serializer.data)
+
+    def put(self, request, pk):
+        genre = self.get_object(pk)
+        serializer = MovieGenreSerializer(genre, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk):
+        genre = self.get_object(pk)
+        genre.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+class MovieRatingListCreateAPIView(APIView):
+    def get(self, request):
+        ratings = MovieRating.objects.all()
+        serializer = MovieRatingSerializer(ratings, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = MovieRatingValidationSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class MovieRatingDetailAPIView(APIView):
+    def get_object(self, pk):
+        try:
+            return MovieRating.objects.get(pk=pk)
+        except MovieRating.DoesNotExist:
+            return Response("Movie rating not found", status=status.HTTP_404_NOT_FOUND)
+
+    def get(self, request, pk):
+        rating = self.get_object(pk)
+        serializer = MovieRatingSerializer(rating)
+        return Response(serializer.data)
+
+    def put(self, request, pk):
+        rating = self.get_object(pk)
+        serializer = MovieRatingSerializer(rating, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk):
+        rating = self.get_object(pk)
+        rating.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)

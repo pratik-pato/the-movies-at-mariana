@@ -1,0 +1,58 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/dataTables.semanticui.min.css">
+    <link rel="stylesheet" href="{% static 'css/homepage.css' %}">
+</head>
+
+<body>
+    <div class="ui inverted menu">
+        <a class="active item">Home</a>
+        <a class="item">Moviemania</a>
+        <a class="item">Results</a>
+    </div>
+
+    <div class="ui container segment">
+        <!-- Multiselect dropdown -->
+        <div class="ui six wide field">
+            <div class="ui fluid multiple search selection dropdown" id="genreDropdown">
+                <input type="hidden" name="genres">
+                <i class="dropdown icon"></i>
+                <div class="default text">Select Genres</div>
+                <div class="menu">
+                    <!-- Populate this part dynamically with genre options -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Add some gap below the dropdown -->
+        <div class="ui hidden divider"></div>
+
+        <table class="ui celled fixed table" id="movieTable">
+            <thead>
+                <tr>
+                    <th style="width:33%;">Title</th>
+                    <th style="width:7%;">Poster</th>
+                    <th style="width:20%;">Genre(s)</th>
+                    <th style="width:20%;">Rating</th>
+                    <th style="width:10%;">Year Release</th>
+                    <th style="width:10%;">Runtime</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Dynamic data rows will be generated here -->
+            </tbody>
+        </table>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.semanticui.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+    <script src="{% static 'js/homepage.js' %}"></script>
+</body>
+
+</html>
